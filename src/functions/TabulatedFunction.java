@@ -1,6 +1,6 @@
 package functions;
 
-public interface TabulatedFunction extends Function{
+public interface TabulatedFunction extends Function, Iterable<FunctionPoint>{
 
     int getPointsCount();
 

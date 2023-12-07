@@ -1,6 +1,8 @@
 package functions;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayTabulatedFunction implements TabulatedFunction, Serializable{
@@ -214,5 +216,40 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Serializable{
         FunctionPoint[] newArray = new FunctionPoint[length];
         System.arraycopy(array, 0, newArray, 0, length);
         return new ArrayTabulatedFunction(newArray);
+    }
+
+    public Iterator<FunctionPoint> iterator() {
+        return new Iterator<>() {
+            private int index = 0;
+
+            public boolean hasNext() {
+                return index < length;
+            }
+
+            public FunctionPoint next() {
+                if (!hasNext())
+                    throw new NoSuchElementException();
+                return new FunctionPoint(array[index++]);
+            }
+
+            public void remove() {
+                throw new UnsupportedOperationException("This iterator can not delete");
+            }
+        };
+    }
+
+    public static class ArrayTabulatedFunctionFactory implements TabulatedFunctionFactory{
+
+        public TabulatedFunction createTabulatedFunction(FunctionPoint[] points) {
+            return new ArrayTabulatedFunction(points);
+        }
+
+        public TabulatedFunction createTabulatedFunction(double leftX, double rightX, int pointsCount) {
+            return new ArrayTabulatedFunction(leftX, rightX, pointsCount);
+        }
+
+        public TabulatedFunction createTabulatedFunction(double leftX, double rightX, double[] values) {
+            return new ArrayTabulatedFunction(leftX, rightX, values);
+        }
     }
 }

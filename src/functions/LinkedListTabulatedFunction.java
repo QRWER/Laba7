@@ -1,6 +1,7 @@
 package functions;
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class LinkedListTabulatedFunction implements TabulatedFunction, Serializable{
@@ -277,5 +278,51 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Serializa
             newNodes[i] = new FunctionPoint(this.getPoint(i));
         }
         return new LinkedListTabulatedFunction(newNodes);
+    }
+
+    public Iterator<FunctionPoint> iterator() {
+        return new Iterator<>() {
+            private FunctionNode current = head.next;
+            private boolean flag = true;
+
+            public boolean hasNext() {
+                if(flag && current.next != head.next)
+                    return true;
+                else if (current.next == head.next){
+                    flag = false;
+                    return true;
+                }
+                else
+                    return false;
+
+            }
+
+            public FunctionPoint next() {
+                if (!hasNext())
+                    throw new NoSuchElementException();
+                FunctionPoint tmp = current.data;
+                current = current.next;
+                return new FunctionPoint(tmp);
+            }
+
+            public void remove() {
+                throw new UnsupportedOperationException("This iterator can not delete");
+            }
+        };
+    }
+
+    public static class ListTabulatedFunction implements TabulatedFunctionFactory{
+
+        public TabulatedFunction createTabulatedFunction(FunctionPoint[] points) {
+            return new LinkedListTabulatedFunction(points);
+        }
+
+        public TabulatedFunction createTabulatedFunction(double leftX, double rightX, int pointsCount) {
+            return new LinkedListTabulatedFunction(leftX, rightX, pointsCount);
+        }
+
+        public TabulatedFunction createTabulatedFunction(double leftX, double rightX, double[] values) {
+            return new LinkedListTabulatedFunction(leftX, rightX, values);
+        }
     }
 }

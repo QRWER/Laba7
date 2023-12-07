@@ -3,6 +3,8 @@ import java.io.*;
 
 public class TabulatedFunctions {
 
+    private static TabulatedFunctionFactory functionFactory = new ArrayTabulatedFunction.ArrayTabulatedFunctionFactory();
+
     private TabulatedFunctions(){
         throw new UnsupportedOperationException("Can not create this class");
     }
@@ -15,7 +17,7 @@ public class TabulatedFunctions {
             double x = leftX + j * i;
             points[i] = new FunctionPoint(x, function.getFunctionValue(x));
         }
-        return new ArrayTabulatedFunction(points);
+        return functionFactory.createTabulatedFunction(points);
     }
 
     public static void outputTabulatedFunction(TabulatedFunction function, OutputStream out){
@@ -42,7 +44,7 @@ public class TabulatedFunctions {
                 points[i] = new FunctionPoint(stream.readDouble(), stream.readDouble());
             }
             stream.close();
-            return new ArrayTabulatedFunction(points);
+            return functionFactory.createTabulatedFunction(points);
         }
         catch (IOException ex){
             ex.printStackTrace();
@@ -84,5 +86,21 @@ public class TabulatedFunctions {
             ex.printStackTrace();
         }
         return null;
+    }
+
+    public static void setTabulatedFunctionFactory(TabulatedFunctionFactory functionFactory){
+        TabulatedFunctions.functionFactory = functionFactory;
+    }
+
+    public static TabulatedFunction createTabulatedFunction(FunctionPoint[] points){
+        return functionFactory.createTabulatedFunction(points);
+    }
+
+    public static TabulatedFunction createTabulatedFunction(double leftX, double rightX, int pointsCount){
+        return functionFactory.createTabulatedFunction(leftX, rightX, pointsCount);
+    }
+
+    public static TabulatedFunction createTabulatedFunction(double leftX, double rightX, double[] values){
+        return functionFactory.createTabulatedFunction(leftX, rightX, values);
     }
 }

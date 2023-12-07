@@ -44,6 +44,15 @@ public class Main {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        complicatedThreads();
+        Function f = new Cos();
+        TabulatedFunction tf;
+        tf = TabulatedFunctions.tabulate(f, 0, Math.PI, 11);
+        System.out.println(tf.getClass());
+        TabulatedFunctions.setTabulatedFunctionFactory(new LinkedListTabulatedFunction.ListTabulatedFunction());
+        tf = TabulatedFunctions.tabulate(f, 0, Math.PI, 11);
+        System.out.println(tf.getClass());
+        TabulatedFunctions.setTabulatedFunctionFactory(new ArrayTabulatedFunction.ArrayTabulatedFunctionFactory());
+        tf = TabulatedFunctions.tabulate(f, 0, Math.PI, 11);
+        System.out.println(tf.getClass());
     }
 }
