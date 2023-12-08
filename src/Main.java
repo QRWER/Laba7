@@ -44,15 +44,22 @@ public class Main {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        Function f = new Cos();
-        TabulatedFunction tf;
-        tf = TabulatedFunctions.tabulate(f, 0, Math.PI, 11);
-        System.out.println(tf.getClass());
-        TabulatedFunctions.setTabulatedFunctionFactory(new LinkedListTabulatedFunction.ListTabulatedFunction());
-        tf = TabulatedFunctions.tabulate(f, 0, Math.PI, 11);
-        System.out.println(tf.getClass());
-        TabulatedFunctions.setTabulatedFunctionFactory(new ArrayTabulatedFunction.ArrayTabulatedFunctionFactory());
-        tf = TabulatedFunctions.tabulate(f, 0, Math.PI, 11);
-        System.out.println(tf.getClass());
+        TabulatedFunction f;
+
+        f = TabulatedFunctions.createTabulatedFunction(0, 10, 3, ArrayTabulatedFunction.class);
+        System.out.println(f.getClass());
+        System.out.println(f);
+
+        f = TabulatedFunctions.createTabulatedFunction(0, 10, new double[] {0, 10}, ArrayTabulatedFunction.class);
+        System.out.println(f.getClass());
+        System.out.println(f);
+
+        f = TabulatedFunctions.createTabulatedFunction(new FunctionPoint[] {new FunctionPoint(0, 0), new FunctionPoint(10, 10)}, LinkedListTabulatedFunction.class);
+        System.out.println(f.getClass());
+        System.out.println(f);
+
+        f = TabulatedFunctions.tabulate(new Sin(), 0, Math.PI, 11, LinkedListTabulatedFunction.class);
+        System.out.println(f.getClass());
+        System.out.println(f);
     }
 }
